@@ -59,14 +59,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-```
 
-Commit changes.
-
----
-
-## ✅ Step 3: Update `requirements.txt` to just:
-```
-scikit-learn
-streamlit
-    
