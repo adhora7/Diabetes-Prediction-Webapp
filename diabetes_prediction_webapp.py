@@ -1,77 +1,72 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar  6 02:23:02 2026
-
-@author: Adhora
-"""
-
 import numpy as np
-import pickle
+import pandas as pd
+from sklearn import svm
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 import streamlit as st
 
+@st.cache_resource
+def train_model():
+    df = pd.read_csv('diabetes.csv')
+    X = df.drop(columns='Outcome', axis=1)
+    Y = df['Outcome']
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    X_train, X_test, Y_train, Y_test = train_test_split(
+        X, Y, test_size=0.2, stratify=Y, random_state=2)
+    model = svm.SVC(kernel='linear')
+    model.fit(X_train, Y_train)
+    return model, scaler
 
-# loading the saved model
-loaded_model = pickle.load(open('trained_model.sav', 'rb'))
-
-
-# creating a function for Prediction
-
-def diabetes_prediction(input_data):
-    
-
-    # changing the input_data to numpy array
-    input_data_as_numpy_array = np.asarray(input_data)
-
-    # reshape the array as we are predicting for one instance
-    input_data_reshaped = input_data_as_numpy_array.reshape(1,-1)
-
-    prediction = loaded_model.predict(input_data_reshaped)
-    print(prediction)
-
-    if (prediction[0] == 0):
-      return 'The person is not diabetic'
+def diabetes_prediction(input_data, model, scaler):
+    arr = np.asarray(input_data, dtype=float).reshape(1, -1)
+    std = scaler.transform(arr)
+    prediction = model.predict(std)
+    if prediction[0] == 0:
+        return '✅ The person is NOT diabetic'
     else:
-      return 'The person is diabetic'
-  
-    
-  
+        return '⚠️ The person IS diabetic'
+
 def main():
-    
-    
-    # giving a title
-    st.title('Diabetes Prediction Web App')
-    
-    
-    # getting the input data from the user
-    
-    
-    Pregnancies = st.text_input('Number of Pregnancies')
-    Glucose = st.text_input('Glucose Level')
-    BloodPressure = st.text_input('Blood Pressure value')
-    SkinThickness = st.text_input('Skin Thickness value')
-    Insulin = st.text_input('Insulin Level')
-    BMI = st.text_input('BMI value')
-    DiabetesPedigreeFunction = st.text_input('Diabetes Pedigree Function value')
-    Age = st.text_input('Age of the Person')
-    
-    
-    # code for Prediction
-    diagnosis = ''
-    
-    # creating a button for Prediction
-    
-    if st.button('Diabetes Test Result'):
-        diagnosis = diabetes_prediction([Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age])
-        
-        
-    st.success(diagnosis)
-    
-    
-    
-    
-    
+    st.set_page_config(page_title="Diabetes Prediction", page_icon="🩺")
+    st.title('🩺 Diabetes Prediction Web App')
+    st.markdown("Enter patient details below:")
+
+    model, scaler = train_model()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        Pregnancies = st.text_input('Number of Pregnancies')
+        BloodPressure = st.text_input('Blood Pressure (mm Hg)')
+        Insulin = st.text_input('Insulin Level')
+        DiabetesPedigreeFunction = st.text_input('Diabetes Pedigree Function')
+    with col2:
+        Glucose = st.text_input('Glucose Level')
+        SkinThickness = st.text_input('Skin Thickness (mm)')
+        BMI = st.text_input('BMI Value')
+        Age = st.text_input('Age')
+
+    if st.button('🔍 Get Diabetes Test Result', use_container_width=True):
+        if all([Pregnancies, Glucose, BloodPressure, SkinThickness,
+                Insulin, BMI, DiabetesPedigreeFunction, Age]):
+            result = diabetes_prediction(
+                [Pregnancies, Glucose, BloodPressure, SkinThickness,
+                 Insulin, BMI, DiabetesPedigreeFunction, Age],
+                model, scaler)
+            st.success(result)
+        else:
+            st.warning('⚠️ Please fill in all fields.')
+
 if __name__ == '__main__':
     main()
-    
-    
+```
+
+Commit changes.
+
+---
+
+## ✅ Step 3: Update `requirements.txt` to just:
+```
+scikit-learn
+streamlit
     
