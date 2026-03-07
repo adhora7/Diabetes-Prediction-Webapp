@@ -53,8 +53,8 @@ This project demonstrates a complete end-to-end machine learning workflow:
 ```
 Diabetes-Prediction-Webapp/
 │
-└── README.md
 └── Prediction_of_Diabetes.ipynb
+└── README.md 
 ├── diabetes.csv    # Main Streamlit web app
 ├── diabetes_prediction_webapp.py   # PIMA Indian Diabetes Dataset
 ├──  predictive_system.py           # Python dependencies
