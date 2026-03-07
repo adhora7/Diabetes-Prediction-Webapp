@@ -23,9 +23,9 @@ def diabetes_prediction(input_data, model, scaler):
     std = scaler.transform(arr)
     prediction = model.predict(std)
     if prediction[0] == 0:
-        return '✅ The person is NOT diabetic'
+        return 'The person is not diabetic'
     else:
-        return '⚠️ The person IS diabetic'
+        return 'The person is diabetic'
 
 def main():
     st.set_page_config(page_title="Diabetes Prediction", page_icon="🩺")
@@ -46,7 +46,7 @@ def main():
         BMI = st.text_input('BMI Value')
         Age = st.text_input('Age')
 
-    if st.button('🔍 Get Diabetes Test Result', use_container_width=True):
+    if st.button(' Get Diabetes Test Result', use_container_width=True):
         if all([Pregnancies, Glucose, BloodPressure, SkinThickness,
                 Insulin, BMI, DiabetesPedigreeFunction, Age]):
             result = diabetes_prediction(
@@ -55,7 +55,7 @@ def main():
                 model, scaler)
             st.success(result)
         else:
-            st.warning('⚠️ Please fill in all fields.')
+            st.warning(' Please fill in all fields.')
 
 if __name__ == '__main__':
     main()
