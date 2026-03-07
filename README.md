@@ -135,8 +135,8 @@ Make sure your repo contains these files:
 
 | File | Required |
 |---|---|
-| `diabetes_prediction_webapp.py` | ✅ Yes |
 | `diabetes.csv` | ✅ Yes |
+| `diabetes_prediction_webapp.py` | ✅ Yes |
 | `requirements.txt` | ✅ Yes |
 | `README.md` | Optional but recommended |
 
